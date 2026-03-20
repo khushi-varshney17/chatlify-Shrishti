@@ -16,14 +16,16 @@ function MessageInput() {
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!text.trim() && !imagePreview) return;
+
     if (isSoundEnabled) playRandomKeyStrokeSound();
 
     sendMessage({
       text: text.trim(),
       image: imagePreview,
     });
+
     setText("");
-    setImagePreview("");
+    setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -65,7 +67,11 @@ function MessageInput() {
         </div>
       )}
 
-      <form onSubmit={handleSendMessage} className="max-w-3xl mx-auto flex space-x-4">
+      <form
+        onSubmit={handleSendMessage}
+        className="max-w-3xl mx-auto flex space-x-4"
+      >
+        {/* ✅ FIXED INPUT */}
         <input
           type="text"
           value={text}
@@ -73,10 +79,11 @@ function MessageInput() {
             setText(e.target.value);
             isSoundEnabled && playRandomKeyStrokeSound();
           }}
-          className="flex-1 bg-slate-800/50 border border-slate-700/50 rounded-lg py-2 px-4"
+          className="flex-1 bg-slate-800/50 border border-slate-700/50 rounded-lg py-2 px-4 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Type your message..."
         />
 
+        {/* FILE INPUT */}
         <input
           type="file"
           accept="image/*"
@@ -85,6 +92,7 @@ function MessageInput() {
           className="hidden"
         />
 
+        {/* IMAGE BUTTON */}
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
@@ -94,6 +102,8 @@ function MessageInput() {
         >
           <ImageIcon className="w-5 h-5" />
         </button>
+
+        {/* SEND BUTTON */}
         <button
           type="submit"
           disabled={!text.trim() && !imagePreview}
@@ -105,4 +115,5 @@ function MessageInput() {
     </div>
   );
 }
+
 export default MessageInput;
